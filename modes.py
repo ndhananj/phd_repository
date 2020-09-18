@@ -223,11 +223,14 @@ def involvement_in_mode_based_on_participation(P,resi,toInclude):
     return I
 
 # plot involvemenet
-def plot_involvement(I,involvement_string="Involvement",mode_end=40):
+def plot_involvement(I,involvement_string="Involvement",mode_end=None,style="lines"):
     fig= plt.figure()
     ax = fig.add_subplot(111)
     mode_end = I.shape[0] if None==mode_end else mode_end
-    ax.bar(range(mode_end),I[:mode_end])
+    if style == "lines":
+        ax.vlines(range(mode_end), [0], I[:mode_end],color='b')
+    else:
+        ax.bar(range(mode_end),I[:mode_end])
     ax.set_xlabel('Mode')
     ax.set_ylabel(involvement_string)
     plt.ylim(I[:mode_end].min()*1.1,I[:mode_end].max()*1.1)
