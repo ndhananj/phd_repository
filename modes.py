@@ -223,7 +223,7 @@ def involvement_in_mode_based_on_participation(P,resi,toInclude):
     return I
 
 # plot involvemenet
-def plot_involvement(I,involvement_string="Involvement",mode_end=None,style="lines"):
+def plot_involvement(I,involvement_string="Involvement",mode_end=40,style="bars"):
     fig= plt.figure()
     ax = fig.add_subplot(111)
     mode_end = I.shape[0] if None==mode_end else mode_end
