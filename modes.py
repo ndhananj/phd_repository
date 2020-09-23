@@ -87,7 +87,7 @@ def get_xvg_stats(xvgfile,fitfile=None,outputForChunks=False,unbias=False):
         trg_c = pdb.df['ATOM'].filter(items=stat_items).to_numpy()
         coords = (get_fitted_coords(c,trg_c,unbias=unbias) for c in coords)
     if(outputForChunks):
-        return (calc_single_coord_stats(c,unbias=unbias) for c in coords) 
+        return (calc_single_coord_stats(c,unbias=unbias) for c in coords)
     else:
         coords = np.concatenate(list(coords),axis=0)
         print("Calculating stats...")
@@ -270,3 +270,9 @@ def plot_area(A,time_step=0.05,area_string="Area"):
     plt.ylim(A.min()*0.9,A.max()*1.1)
     plt.savefig(area_string+".jpg")
     #plt.show()
+
+def chunk_name(original_name,chunk):
+    return str(chunk)+"_"+original_name
+
+def chunk_glob(original_name):
+    return glob.glob('./*_'+original_name)

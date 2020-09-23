@@ -27,11 +27,11 @@ def get_covariance_matrix_and_stats(xvg_input,\
             print("S2 ",S2.shape)
             print("max|S-S2|=",np.max(err))
             print("mean(err)=",np.mean(err))
-            save_matrix(str(i)+"_"+covariance,cov)
-            save_matrix(str(i)+"_"+eigenvalues,D)
-            save_matrix(str(i)+"_"+spring_constants,k)
-            save_matrix(str(i)+"_"+eigenmatrix,S)
-            save_matrix(str(i)+"_"+participations,P)
+            save_matrix(chunk_name(covariance,i),cov)
+            save_matrix(chunk_name(eigenvalues,i),D)
+            save_matrix(chunk_name(spring_constants,i),k)
+            save_matrix(chunk_name(eigenmatrix,i),S)
+            save_matrix(chunk_name(participations,i),P)
             i+=1
     else:
         mean, cov, D, S, S2, coords = \
