@@ -77,7 +77,7 @@ def get_fitted_coords(coords,trg_c,unbias=False):
     print("Shape of data for covariance calculation:",coords.shape)
     return coords
 
-def get_xvg_stats(xvgfile,fitfile=None,unbias=False):
+def get_xvg_stats(xvgfile,fitfile=None,outputForChunks=False,unbias=False):
     coords = chunked_xvg_coords(xvgfile)
     if(fitfile):
         print("Fitting...")
@@ -86,10 +86,13 @@ def get_xvg_stats(xvgfile,fitfile=None,unbias=False):
         print("Fit file read in")
         trg_c = pdb.df['ATOM'].filter(items=stat_items).to_numpy()
         coords = (get_fitted_coords(c,trg_c,unbias=unbias) for c in coords)
-    coords = np.concatenate(list(coords),axis=0)
-    print("Calculating stats...")
-    mean, cov, s, u, v = calc_single_coord_stats(coords,unbias=unbias)
-    return mean, cov, s, u, v, coords
+    if(outputForChunks):
+        return (calc_single_coord_stats(c,unbias=unbias) for c in coords) 
+    else:
+        coords = np.concatenate(list(coords),axis=0)
+        print("Calculating stats...")
+        mean, cov, s, u, v = calc_single_coord_stats(coords,unbias=unbias)
+        return mean, cov, s, u, v, coords
 
 # eignevector should be in nx3 form for single eigenvector
 def get_atom_participation_from_eigenvector(S):
