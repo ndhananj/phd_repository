@@ -20,6 +20,7 @@ import glob
 
 from biopandas.pdb import PandasPdb
 
+from more_itertools import *
 
 ################################################################################
 # General functions
@@ -137,12 +138,19 @@ def read_xvg_lines(filename):
     print("Reading xvg")
     return open(filename, 'r+').readlines()
 
+def xvg_float_data_generator_from_lines(lines):
+    return (np.array(line.split()).astype(np.float) \
+        for line in lines if line[0] not in ['@','#'])
+
 def get_xvg_data_array_from_lines(lines):
-    return np.array(list(np.array(line.split()).astype(np.float) \
-        for line in lines if line[0] not in ['@','#']))
+    return np.array(list(xvg_float_data_generator_from_lines(lines)))
 
 def get_xvg_data_array_from_file(filename):
     return get_xvg_data_array_from_lines(open(filename, 'r+'))
+
+def chunked_xvg_coord_data_from_file(filename, chunk_size=2000):
+    return chunked(xvg_float_data_generator_from_lines(open(filename, 'r+')),\
+        chunk_size)
 
 def read_xvg(filename):
     lines = read_xvg_lines(filename)

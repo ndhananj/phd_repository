@@ -60,28 +60,33 @@ def load_matrix(filename):
 def get_xvg_coords(xvgfile):
     return get_xvg_data_array_from_file(xvgfile)[:,1:]*10 #nm to A
 
+def chunked_xvg_coords(xvgfile,chunk_size=2000):
+    chunks = chunked_xvg_coord_data_from_file(xvgfile,chunk_size=chunk_size)
+    return (np.array(c)[:,1:]*10 for c in chunks)
+
 def get_fitted_coords(coords,trg_c,unbias=False):
     src_cs_shape = (coords.shape[0],int(coords.shape[1]/3),3)
     src_cs = coords.reshape(src_cs_shape)
-    print("New shape of data:",src_cs.shape)
+    print("Shape of data to be fitted:",src_cs.shape)
     for i in range(src_cs_shape[0]):
         src_mu, trg_mu, rot_mat = find_coords_align(src_cs[i],trg_c,\
-            unbias=False,force_mirror=False,force_no_mirror=False)
+            unbias=unbias,force_mirror=False,force_no_mirror=False)
         src_cs[i] = realign_coords(src_cs[i],src_mu, trg_mu, rot_mat)
     coords = src_cs.reshape((coords.shape[0],coords.shape[1]))
     print("New coordinates calculated")
+    print("Shape of data for covariance calculation:",coords.shape)
     return coords
 
 def get_xvg_stats(xvgfile,fitfile=None,unbias=False):
-    coords=get_xvg_coords(xvgfile)
-    print("Shape of data:",coords.shape)
+    coords = chunked_xvg_coords(xvgfile)
     if(fitfile):
         print("Fitting...")
         pdb = PandasPdb()
         pdb.read_pdb(fitfile)
         print("Fit file read in")
         trg_c = pdb.df['ATOM'].filter(items=stat_items).to_numpy()
-        get_fitted_coords(coords,trg_c,unbias=unbias)
+        coords = (get_fitted_coords(c,trg_c,unbias=unbias) for c in coords)
+    coords = np.concatenate(list(coords),axis=0)
     print("Calculating stats...")
     mean, cov, s, u, v = calc_single_coord_stats(coords,unbias=unbias)
     return mean, cov, s, u, v, coords
