@@ -245,8 +245,9 @@ def plot_coarse_grained_involvement(I, involvement_string="Coarse Grained Involv
     ax.vlines(center_modes,[0],J)
     ax.set_xlabel('Center Mode')
     ax.set_ylabel(involvement_string)
-    plt.ylim(J.min()*1.1,J.max()*1.1)
-    plt.savefig(involvement_string+".jpg")
+    plt.ylim(0,J.max()*1.1)
+    plt.show()
+    #plt.savefig(involvement_string+".jpg")
 
 
 # plot involvemenet
