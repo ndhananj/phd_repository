@@ -230,6 +230,25 @@ def involvement_in_mode_based_on_participation(P,resi,toInclude):
     I=np.sum([P[i,:] for i in range(num_res) if resi[i] in toInclude],axis=0)
     return I
 
+# plot involvment by coarse graining first
+def plot_coarse_grained_involvement(I, involvement_string="Coarse Grained Involvement",
+    num_modes_combined=100):
+    fig= plt.figure()
+    ax = fig.add_subplot(111)
+    num_modes=I.shape[0]
+    intShape=(int(I.shape[0]/num_modes_combined),num_modes_combined)
+    J=np.sum(I[:intShape[0]*intShape[1]].reshape(intShape),axis=1)
+    print(J.shape)
+    offset = num_modes_combined/2
+    center_modes = np.arange(offset,num_modes-offset,num_modes_combined)
+    print(center_modes.shape)
+    ax.vlines(center_modes,[0],J)
+    ax.set_xlabel('Center Mode')
+    ax.set_ylabel(involvement_string)
+    plt.ylim(J.min()*1.1,J.max()*1.1)
+    plt.savefig(involvement_string+".jpg")
+
+
 # plot involvemenet
 def plot_involvement(I,involvement_string="Involvement",mode_end=40,style="bars"):
     fig= plt.figure()
