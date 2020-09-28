@@ -5,6 +5,11 @@ import sys
 from biopandas.pdb import PandasPdb
 from modes import shift_by_mode
 
+# shift the original pdb by a fixed amplitude
+# calculate the short axis distance of this mode
+# store the short axis distance
+# plot the short axis distance against modes to figure out peaks
+
 if __name__ == "__main__":
     # input pdb
     start_pdb = sys.argv[1]
