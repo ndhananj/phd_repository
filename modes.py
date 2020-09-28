@@ -224,6 +224,11 @@ def modes(xvgfile,ndxfile,pdbfile,mode_indices,newpdbfile,mul,\
         create_mode_movie(mul,movie_steps,\
             ndxfile,pdbfile,mode,mode_pdb_file,ndx_name)
 
+# get the involvement of specific atoms in a mode based on participation
+def atom_involvement_in_mode_based_on_participation(P,toInclude):
+    I=np.sum([P[i,:] for i in range(num_res) if i in toInclude],axis=0)
+    return I
+
 # get the involvement of specific residues in a mode based on participation
 def involvement_in_mode_based_on_participation(P,resi,toInclude):
     num_res=resi.shape[0]
