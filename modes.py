@@ -226,7 +226,7 @@ def modes(xvgfile,ndxfile,pdbfile,mode_indices,newpdbfile,mul,\
 
 # get the involvement of specific atoms in a mode based on participation
 def atom_involvement_in_mode_based_on_participation(P,toInclude):
-    I=np.sum([P[i,:] for i in range(num_res) if i in toInclude],axis=0)
+    I=np.sum([P[i,:] for i in range(P) if i in toInclude],axis=0)
     return I
 
 # get the involvement of specific residues in a mode based on participation
