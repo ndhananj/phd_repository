@@ -15,6 +15,10 @@ from gmx_file_processing import read_ndx, match_col_in_int_list
 ALA63 = 491
 PHE28 = 212
 
+# atom indices in eigenmatrix
+ALA63_i = ALA63 - 1
+PHE28_i = PHE28 - 1
+
 # get the short axis distance
 def get_short_axis_distance(atom1, atom2):
     x2 = np.square(atom1[0] - atom2[0])
