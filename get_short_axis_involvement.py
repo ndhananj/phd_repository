@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 from biopandas.pdb import PandasPdb
-from modes import shift_by_mode
-from gmx_file_processing import read_ndx
+from modes import shift_by_mode, plot_involvement
+from gmx_file_processing import read_ndx, match_col_in_int_list
 
 # shift the original pdb by a fixed amplitude
 # calculate the short axis distance of this mode
@@ -46,7 +46,7 @@ def get_delta_D(D, D0):
     
 # plotting function
 def plot_short_axis_spectrum(delta_D, title):
-    pass
+    plot_involvement(delta_D, title)
 
 if __name__ == "__main__":
     # input pdb
@@ -82,4 +82,7 @@ if __name__ == "__main__":
 
     # find delta D
     delta_D = get_delta_D(Dmax, D0)
+
+    # plot the spectrum
+    plot_short_axis_spectrum(delta_D, output_graph)
     
