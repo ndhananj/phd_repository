@@ -54,3 +54,5 @@ if __name__ == "__main__":
 
     ALA_coord = get_atom_coord(ppdb.df, ALA63)
     PHE_coord = get_atom_coord(ppdb.df, PHE28)
+
+    short_axis_distance = get_short_axis_distance(ALA_coord, PHE_coord)
