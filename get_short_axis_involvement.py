@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 from biopandas.pdb import PandasPdb
-from modes import shift_by_mode, plot_involvement, save_matrix
+from modes import shift_by_mode, plot_involvement, save_matrix, get_movie_muls
 from gmx_file_processing import read_ndx, match_col_in_int_list
 
 # shift the original pdb by a fixed amplitude
@@ -30,9 +30,17 @@ def get_atom_coord(df, atom_number):
     return coord
 
 # calculate short axis distance of one mode
-def get_one_mode_short_axis_delta_dist(short_axis, eigenmatrix, indices, mul):
-    # find atom mode vector by index
+def get_one_mode_short_axis_delta_dist(short_axis_init, modes, indices, mul):
+    # find atom mode vector by index (1X3)
+    ALA_vector = modes[indices[0], :]
+    PHE_vector = modes[indices[1], :]
+    # harmonic shifting
+    sample_steps = 150
+    muls = get_movie_muls(mul, sample_steps)
     # shift two atoms by +- mul
+    ALA_coords = short_axis_init + muls * ALA_vector
+    PHE_coords = short_axis_init + muls * PHE_vector
+    # find all distances
     # find Dmax - Dmin
     pass
 
