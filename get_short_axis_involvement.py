@@ -58,7 +58,10 @@ def get_all_modes_short_axis_delta_dist(short_axis_atoms_init, eigenmatrix, indi
     short_axis_delta_D = []
     for i in range(eigenmatrix.shape[0]):
         mode = eigenmatrix[:, i].reshape(shift_shape)
-    pass
+        one_delta_D = get_one_mode_short_axis_delta_dist(short_axis_atoms_init, mode, indices, mul)
+        short_axis_delta_D.append(one_delta_D)
+    
+    return np.array(short_axis_delta_D)
 
 # find difference in distances
 def get_delta_D(D, D0):
