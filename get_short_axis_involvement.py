@@ -39,6 +39,10 @@ def get_all_modes_short_axis_dist(df, eigenmatrix, indices, mul):
         D = get_short_axis_distance(ALA_i, PHE_i)
         short_axis_dist_list.append(D)
     return np.array(short_axis_dist_list)
+
+# find difference in distances
+def get_delta_D(D, D0):
+    return D - D0
     
 # plotting function
 def plot_short_axis_spectrum(delta_D, title):
@@ -56,7 +60,7 @@ if __name__ == "__main__":
     ndx = read_ndx(sys.argv[2])
 
     # eigenmatrix
-    eigenmatrix = sys.argv[3]
+    eigenmatrix = np.load(sys.argv[3])
 
     # output figure filename
     if len(sys.argv) > 4:
@@ -72,3 +76,10 @@ if __name__ == "__main__":
 
     # initial_short_axis_distance
     D0 = get_short_axis_distance(ALA_init, PHE_init)
+
+    # find Dmax
+    Dmax = get_all_modes_short_axis_dist(ppdb_start.df, eigenmatrix, ndx, shift_amp)
+
+    # find delta D
+    delta_D = get_delta_D(Dmax, D0)
+    
