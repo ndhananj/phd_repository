@@ -41,8 +41,10 @@ def get_one_mode_short_axis_delta_dist(short_axis_init, modes, indices, mul):
     ALA_coords = short_axis_init + muls * ALA_vector
     PHE_coords = short_axis_init + muls * PHE_vector
     # find all distances
+    all_dist = get_short_axis_distance(ALA_coords, PHE_coords)
     # find Dmax - Dmin
-    pass
+    delta_D = all_dist.max() - all_dist.min()
+    return delta_D
 
 # get short axis distances of all modes
 def get_all_modes_short_axis_dist(df, eigenmatrix, indices, mul):
