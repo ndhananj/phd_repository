@@ -88,14 +88,18 @@ if __name__ == "__main__":
     # shift amplitude
     shift_amp = 40
 
+    # short axis atom list
     ALA_init = get_atom_coord(ppdb_start.df['ATOM'], ALA63)
     PHE_init = get_atom_coord(ppdb_start.df['ATOM'], PHE28)
+    short_axis_atoms = np.array([ALA_init, PHE_init])
 
     # initial_short_axis_distance
     D0 = get_short_axis_distance(ALA_init, PHE_init)
 
+    # short axis indices
+    sa_indices = np.array([ALA63_i, PHE28_i])
     # find Dmax
-    Dmax = get_all_modes_short_axis_dist(ppdb_start.df, eigenmatrix, ndx, shift_amp)
+    Dmax = get_all_modes_short_axis_delta_dist(short_axis_atoms, eigenmatrix, sa_indices, shift_amp)
 
     # find delta D
     delta_D = get_delta_D(Dmax, D0)
