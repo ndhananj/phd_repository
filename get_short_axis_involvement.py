@@ -32,7 +32,7 @@ def get_atom_coord(df, atom_number):
 # get short axis distances of all modes
 def get_all_modes_short_axis_dist(df, eigenmatrix, indices, mul):
     # reshape eigenmatrix
-    shift_shape = (int(eigenmatrix.shape[1]/3, 3))
+    shift_shape = (int(eigenmatrix.shape[1]/3), 3)
     # list to store all short axis distances
     short_axis_dist_list = []
     for i in range(eigenmatrix.shape[0]):
