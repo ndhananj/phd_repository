@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 from biopandas.pdb import PandasPdb
-from modes import shift_by_mode, plot_involvement
+from modes import shift_by_mode, plot_involvement, save_matrix
 from gmx_file_processing import read_ndx, match_col_in_int_list
 
 # shift the original pdb by a fixed amplitude
@@ -25,7 +25,7 @@ def get_short_axis_distance(atom1, atom2):
 # find atom coordinates based on atom number
 def get_atom_coord(df, atom_number):
     stat_items = ['x_coord', 'y_coord', 'z_coord']
-    coord = df['ATOM'][df['ATOM']['atom_number'] == atom_number] \
+    coord = df[df['atom_number'] == atom_number] \
             [stat_items].to_numpy()[0]
     return coord
 
@@ -37,7 +37,7 @@ def get_all_modes_short_axis_dist(df, eigenmatrix, indices, mul):
     short_axis_dist_list = []
     for i in range(eigenmatrix.shape[0]):
         mode = eigenmatrix[:, i].reshape(shift_shape)
-        shifted_df = shift_by_mode(df, mode, indices, mul)
+        shifted_df = shift_by_mode(df['ATOM'], mode, indices, mul)
         ALA_i = get_atom_coord(shifted_df, ALA63)
         PHE_i = get_atom_coord(shifted_df, PHE28)
         D = get_short_axis_distance(ALA_i, PHE_i)
@@ -75,17 +75,20 @@ if __name__ == "__main__":
     # shift amplitude
     shift_amp = 40
 
-    ALA_init = get_atom_coord(ppdb_start.df, ALA63)
-    PHE_init = get_atom_coord(ppdb_start.df, PHE28)
+    ALA_init = get_atom_coord(ppdb_start.df['ATOM'], ALA63)
+    PHE_init = get_atom_coord(ppdb_start.df['ATOM'], PHE28)
 
     # initial_short_axis_distance
     D0 = get_short_axis_distance(ALA_init, PHE_init)
 
     # find Dmax
-    Dmax = get_all_modes_short_axis_dist(ppdb_start.df['ATOM'], eigenmatrix, ndx, shift_amp)
+    Dmax = get_all_modes_short_axis_dist(ppdb_start.df, eigenmatrix, ndx, shift_amp)
 
     # find delta D
     delta_D = get_delta_D(Dmax, D0)
+
+    # store delta D
+    save_matrix("delta_short_axis_distance.npy", delta_D)
 
     # plot the spectrum
     plot_short_axis_spectrum(delta_D, output_graph)
