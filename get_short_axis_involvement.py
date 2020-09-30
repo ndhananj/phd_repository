@@ -18,7 +18,7 @@ def get_short_axis_distance(atom1, atom2):
     return np.sqrt(x2 + y2 + z2)
 
 # plotting function
-def plot_short_axis_spectrum():
+def plot_short_axis_spectrum(delta_D, title):
     pass
 
 # find atom coordinates based on atom number
