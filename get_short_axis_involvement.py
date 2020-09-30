@@ -31,9 +31,13 @@ def get_atom_coord(df, atom_number):
 
 # get short axis distances of all modes
 def get_all_modes_short_axis_dist(df, eigenmatrix, indices, mul):
+    # reshape eigenmatrix
+    shift_shape = (int(eigenmatrix.shape[1]/3, 3))
+    # list to store all short axis distances
     short_axis_dist_list = []
     for i in range(eigenmatrix.shape[0]):
-        shifted_df = shift_by_mode(df, eigenmatrix[:,i], indices, mul)
+        mode = eigenmatrix[:, i].reshape(shift_shape)
+        shifted_df = shift_by_mode(df, mode, indices, mul)
         ALA_i = get_atom_coord(shifted_df, ALA63)
         PHE_i = get_atom_coord(shifted_df, PHE28)
         D = get_short_axis_distance(ALA_i, PHE_i)
@@ -57,7 +61,7 @@ if __name__ == "__main__":
     ppdb_start.read_pdb(start_pdb)
 
     # index file
-    ndx = read_ndx(sys.argv[2])
+    ndx = read_ndx(sys.argv[2])['System']
 
     # eigenmatrix
     eigenmatrix = np.load(sys.argv[3])
@@ -78,7 +82,7 @@ if __name__ == "__main__":
     D0 = get_short_axis_distance(ALA_init, PHE_init)
 
     # find Dmax
-    Dmax = get_all_modes_short_axis_dist(ppdb_start.df, eigenmatrix, ndx, shift_amp)
+    Dmax = get_all_modes_short_axis_dist(ppdb_start.df['ATOM'], eigenmatrix, ndx, shift_amp)
 
     # find delta D
     delta_D = get_delta_D(Dmax, D0)
