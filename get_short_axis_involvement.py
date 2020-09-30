@@ -34,10 +34,10 @@ def get_atom_coord(df, atom_number):
     return coord
 
 # calculate short axis distance of one mode
-def get_one_mode_short_axis_delta_dist(short_axis_atoms_init, modes, indices, mul):
+def get_one_mode_short_axis_delta_dist(short_axis_atoms_init, mode, indices, mul):
     # find atom mode vector by index (1X3)
-    ALA_vector = modes[indices[0], :]
-    PHE_vector = modes[indices[1], :]
+    ALA_vector = mode[indices[0], :]
+    PHE_vector = mode[indices[1], :]
     # harmonic shifting
     sample_steps = 150
     muls = get_movie_muls(mul, sample_steps)
