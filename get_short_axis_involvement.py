@@ -42,8 +42,8 @@ def get_one_mode_short_axis_delta_dist(short_axis_atoms_init, mode, indices, mul
     sample_steps = 150
     muls = get_movie_muls(mul, sample_steps)
     # shift two atoms by +- mul
-    ALA_coords = short_axis_atoms_init + muls * ALA_vector
-    PHE_coords = short_axis_atoms_init + muls * PHE_vector
+    ALA_coords = short_axis_atoms_init[0] + muls * ALA_vector
+    PHE_coords = short_axis_atoms_init[1] + muls * PHE_vector
     # find all distances
     all_dist = get_short_axis_distance(ALA_coords, PHE_coords)
     # find Dmax - Dmin
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     delta_D = get_all_modes_short_axis_delta_dist(short_axis_atoms, eigenmatrix, sa_indices, shift_amp)
 
     # store delta D
-    save_matrix("delta_short_axis_distance.npy", delta_D)
+    # save_matrix("delta_short_axis_distance.npy", delta_D)
 
     # plot the spectrum
     plot_short_axis_spectrum(delta_D, output_graph)
