@@ -34,7 +34,7 @@ def get_atom_coord(df, atom_number):
     return coord
 
 # calculate short axis distance of one mode
-def get_one_mode_short_axis_delta_dist(short_axis_init, modes, indices, mul):
+def get_one_mode_short_axis_delta_dist(short_axis_atoms_init, modes, indices, mul):
     # find atom mode vector by index (1X3)
     ALA_vector = modes[indices[0], :]
     PHE_vector = modes[indices[1], :]
@@ -42,8 +42,8 @@ def get_one_mode_short_axis_delta_dist(short_axis_init, modes, indices, mul):
     sample_steps = 150
     muls = get_movie_muls(mul, sample_steps)
     # shift two atoms by +- mul
-    ALA_coords = short_axis_init + muls * ALA_vector
-    PHE_coords = short_axis_init + muls * PHE_vector
+    ALA_coords = short_axis_atoms_init + muls * ALA_vector
+    PHE_coords = short_axis_atoms_init + muls * PHE_vector
     # find all distances
     all_dist = get_short_axis_distance(ALA_coords, PHE_coords)
     # find Dmax - Dmin
@@ -51,19 +51,14 @@ def get_one_mode_short_axis_delta_dist(short_axis_init, modes, indices, mul):
     return delta_D
 
 # get short axis distances of all modes
-def get_all_modes_short_axis_dist(df, eigenmatrix, indices, mul):
+def get_all_modes_short_axis_delta_dist(short_axis_atoms_init, eigenmatrix, indices, mul):
     # reshape eigenmatrix
     shift_shape = (int(eigenmatrix.shape[1]/3), 3)
     # list to store all short axis distances
-    short_axis_dist_list = []
+    short_axis_delta_D = []
     for i in range(eigenmatrix.shape[0]):
         mode = eigenmatrix[:, i].reshape(shift_shape)
-        shifted_df = shift_by_mode(df['ATOM'], mode, indices, mul)
-        ALA_i = get_atom_coord(shifted_df, ALA63)
-        PHE_i = get_atom_coord(shifted_df, PHE28)
-        D = get_short_axis_distance(ALA_i, PHE_i)
-        short_axis_dist_list.append(D)
-    return np.array(short_axis_dist_list)
+    pass
 
 # find difference in distances
 def get_delta_D(D, D0):
