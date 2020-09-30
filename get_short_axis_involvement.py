@@ -76,15 +76,12 @@ if __name__ == "__main__":
     ppdb_start = PandasPdb()
     ppdb_start.read_pdb(start_pdb)
 
-    # index file
-    ndx = read_ndx(sys.argv[2])['System']
-
     # eigenmatrix
-    eigenmatrix = np.load(sys.argv[3])
+    eigenmatrix = np.load(sys.argv[2])
 
     # output figure filename
-    if len(sys.argv) > 4:
-        output_graph = sys.argv[4]
+    if len(sys.argv) > 3:
+        output_graph = sys.argv[3]
     else:
         output_graph = "short_axis_distance_across_all_modes"
 
