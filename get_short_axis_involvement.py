@@ -50,7 +50,7 @@ def get_delta_D(D, D0):
     
 # plotting function
 def plot_short_axis_spectrum(delta_D, title):
-    plot_involvement(delta_D, title)
+    plot_involvement(delta_D, title, mode_end=None, style='lines')
 
 if __name__ == "__main__":
     # input pdb
