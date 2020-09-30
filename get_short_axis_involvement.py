@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 from biopandas.pdb import PandasPdb
-from modes import shift_by_mode, plot_involvement, save_matrix, get_movie_muls
+from modes import plot_involvement, save_matrix, get_movie_muls
 from gmx_file_processing import read_ndx, match_col_in_int_list
 
 # shift the original pdb by a fixed amplitude
