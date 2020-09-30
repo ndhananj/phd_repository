@@ -33,8 +33,8 @@ if __name__ == "__main__":
     start_pdb = sys.argv[1]
 
     # read in as BioPandas Data Frame
-    ppdb = PandasPdb()
-    ppdb.read_pdb(start_pdb)
+    ppdb_start = PandasPdb()
+    ppdb_start.read_pdb(start_pdb)
 
     # eigenmatrix
     eigenmatrix = sys.argv[2]
@@ -52,7 +52,8 @@ if __name__ == "__main__":
     # shift amplitude
     shift_amp = 40
 
-    ALA_coord = get_atom_coord(ppdb.df, ALA63)
-    PHE_coord = get_atom_coord(ppdb.df, PHE28)
+    ALA_init = get_atom_coord(ppdb_start.df, ALA63)
+    PHE_init = get_atom_coord(ppdb_start.df, PHE28)
 
-    short_axis_distance = get_short_axis_distance(ALA_coord, PHE_coord)
+    # initial_short_axis_distance
+    D0 = get_short_axis_distance(ALA_init, PHE_init)
