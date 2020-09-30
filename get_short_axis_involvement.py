@@ -102,10 +102,7 @@ if __name__ == "__main__":
     # short axis indices
     sa_indices = np.array([ALA63_i, PHE28_i])
     # find Dmax
-    Dmax = get_all_modes_short_axis_delta_dist(short_axis_atoms, eigenmatrix, sa_indices, shift_amp)
-
-    # find delta D
-    delta_D = get_delta_D(Dmax, D0)
+    delta_D = get_all_modes_short_axis_delta_dist(short_axis_atoms, eigenmatrix, sa_indices, shift_amp)
 
     # store delta D
     save_matrix("delta_short_axis_distance.npy", delta_D)
