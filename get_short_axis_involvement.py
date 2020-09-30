@@ -29,6 +29,13 @@ def get_atom_coord(df, atom_number):
             [stat_items].to_numpy()[0]
     return coord
 
+# calculate short axis distance of one mode
+def get_one_mode_short_axis_delta_dist(short_axis, eigenmatrix, indices, mul):
+    # find atom mode vector by index
+    # shift two atoms by +- mul
+    # find Dmax - Dmin
+    pass
+
 # get short axis distances of all modes
 def get_all_modes_short_axis_dist(df, eigenmatrix, indices, mul):
     # reshape eigenmatrix
