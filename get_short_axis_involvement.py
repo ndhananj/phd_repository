@@ -57,13 +57,14 @@ def get_one_mode_short_axis_delta_dist(short_axis_atoms_init, mode, indices, mul
     return delta_D
 
 # get short axis distances of all modes
-def get_all_modes_short_axis_delta_dist(short_axis_atoms_init, eigenmatrix, indices):
+def get_all_modes_short_axis_delta_dist(short_axis_atoms_init, eigenmatrix, eigenvalues, indices):
     # reshape eigenmatrix
     shift_shape = (int(eigenmatrix.shape[1]/3), 3)
     # list to store all short axis distances
     short_axis_delta_D = []
     for i in range(eigenmatrix.shape[0]):
         mode = eigenmatrix[:, i].reshape(shift_shape)
+        mul = get_amp_from_ev(eigenvalues, i)
         one_delta_D = get_one_mode_short_axis_delta_dist(short_axis_atoms_init, mode, indices, mul)
         short_axis_delta_D.append(one_delta_D)
     
@@ -92,10 +93,13 @@ if __name__ == "__main__":
 
     # eigenmatrix
     eigenmatrix = np.load(sys.argv[2])
+    
+    # eigenvalues
+    eigenvalues = np.load(sys.argv[3])
 
     # output figure filename
-    if len(sys.argv) > 3:
-        output_graph = sys.argv[3]
+    if len(sys.argv) > 4:
+        output_graph = sys.argv[4]
     else:
         output_graph = "short_axis_distance_across_all_modes"
 
@@ -113,7 +117,7 @@ if __name__ == "__main__":
     # short axis indices
     sa_indices = np.array([ALA63_i, PHE28_i])
     # find Dmax
-    delta_D = get_all_modes_short_axis_delta_dist(short_axis_atoms, eigenmatrix, sa_indices)
+    delta_D = get_all_modes_short_axis_delta_dist(short_axis_atoms, eigenmatrix, eigenvalues, sa_indices)
 
     # store delta D
     # save_matrix("delta_short_axis_distance.npy", delta_D)
