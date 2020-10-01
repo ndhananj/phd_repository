@@ -46,10 +46,11 @@ def get_one_mode_short_axis_delta_dist(short_axis_atoms_init, mode, indices, mul
     # find all distances
     for mul in muls: 
         # shift two atoms by +- mul
-        ALA_coords = short_axis_atoms_init[0] + muls * ALA_vector
-        PHE_coords = short_axis_atoms_init[1] + muls * PHE_vector
+        ALA_coords = short_axis_atoms_init[0] + mul * ALA_vector
+        PHE_coords = short_axis_atoms_init[1] + mul * PHE_vector
         all_dist.append(get_short_axis_distance(ALA_coords, PHE_coords))
     
+    all_dist = np.array(all_dist)
     # find Dmax - Dmin
     delta_D = all_dist.max() - all_dist.min()
     
