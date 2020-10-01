@@ -77,6 +77,11 @@ def get_delta_D(D, D0):
 def plot_short_axis_spectrum(delta_D, title):
     plot_involvement(delta_D, title, mode_end=None, style='lines')
 
+# get amplitude from eigenvalues
+def get_amp_from_ev(ev, mode_index):
+    eigenvalue = ev[mode_index] # A^2
+    return np.sqrt(eigenvalue)
+
 if __name__ == "__main__":
     # input pdb
     start_pdb = sys.argv[1]
