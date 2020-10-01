@@ -41,17 +41,18 @@ def get_one_mode_short_axis_delta_dist(short_axis_atoms_init, mode, indices, mul
     # harmonic shifting
     sample_steps = 150
     muls = get_movie_muls(mul, sample_steps)
-    # shift two atoms by +- mul
-    ALA_coords = []
-    PHE_coords = []
-    for mul in muls: 
-        ALA_coords.append(short_axis_atoms_init[0] + mul * ALA_vector)
-        PHE_coords.append(short_axis_atoms_init[1] + mul * PHE_vector)
     
+    all_dist = []
     # find all distances
-    all_dist = get_short_axis_distance(ALA_coords, PHE_coords)
+    for mul in muls: 
+        # shift two atoms by +- mul
+        ALA_coords = short_axis_atoms_init[0] + muls * ALA_vector
+        PHE_coords = short_axis_atoms_init[1] + muls * PHE_vector
+        all_dist.append(get_short_axis_distance(ALA_coords, PHE_coords))
+    
     # find Dmax - Dmin
     delta_D = all_dist.max() - all_dist.min()
+    
     return delta_D
 
 # get short axis distances of all modes
