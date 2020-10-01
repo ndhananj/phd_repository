@@ -57,7 +57,7 @@ def get_one_mode_short_axis_delta_dist(short_axis_atoms_init, mode, indices, mul
     return delta_D
 
 # get short axis distances of all modes
-def get_all_modes_short_axis_delta_dist(short_axis_atoms_init, eigenmatrix, indices, mul):
+def get_all_modes_short_axis_delta_dist(short_axis_atoms_init, eigenmatrix, indices):
     # reshape eigenmatrix
     shift_shape = (int(eigenmatrix.shape[1]/3), 3)
     # list to store all short axis distances
@@ -100,7 +100,7 @@ if __name__ == "__main__":
         output_graph = "short_axis_distance_across_all_modes"
 
     # shift amplitude
-    shift_amp = 40
+    # shift_amp = 40
 
     # short axis atom list
     ALA_init = get_atom_coord(ppdb_start.df['ATOM'], ALA63)
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     # short axis indices
     sa_indices = np.array([ALA63_i, PHE28_i])
     # find Dmax
-    delta_D = get_all_modes_short_axis_delta_dist(short_axis_atoms, eigenmatrix, sa_indices, shift_amp)
+    delta_D = get_all_modes_short_axis_delta_dist(short_axis_atoms, eigenmatrix, sa_indices)
 
     # store delta D
     # save_matrix("delta_short_axis_distance.npy", delta_D)
