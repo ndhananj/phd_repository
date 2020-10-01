@@ -6,7 +6,7 @@ from biopandas.pdb import PandasPdb
 from modes import plot_involvement, save_matrix, get_movie_muls
 from gmx_file_processing import read_ndx, match_col_in_int_list
 
-# shift the original pdb by a fixed amplitude
+# shift the original pdb by a certain amplitude
 # calculate the short axis distance of this mode
 # store the short axis distance
 # plot the short axis distance against modes to figure out peaks
