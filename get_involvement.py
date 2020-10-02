@@ -21,12 +21,13 @@ def get_involvement(involved_residues,\
     else:
         P=load_matrix(participation)
         resi=load_matrix(residues)
+        ev=load_matrix(eigenvalues)
         f = open(involved_residues, "r")
         toInclude = np.array(f.read().split()).astype(int)
         I=involvement_in_mode_based_on_participation(\
             P,resi,toInclude)
         # scale each mode's participation by their normalized eigenvalues
-        normalized_ev = normalize_eigenvalues(eigenvalues)
+        normalized_ev = normalize_eigenvalues(ev)
         for i in range(len(I)):
             I[i] = I[i] * normalized_ev[i]
 
@@ -46,4 +47,4 @@ if __name__ == '__main__':
     involvement_string = sys.argv[6] if len(sys.argv)>6 \
        else 'Bottleneck Involvement'
     get_involvement(involved_residues,outputForChunks,participation,\
-        residues,involvement_string)
+        eigenvalues,residues,involvement_string)
