@@ -1,6 +1,10 @@
 
 from modes import *
 
+def normalize_eigenvalues(eigenvalues):
+    max_ev = eigenvalues.max()
+    return eigenvalues /= max_ev
+
 def get_involvement(involved_residues,\
     outputForChunks=False,\
     participation='participations.npy',\
@@ -20,6 +24,11 @@ def get_involvement(involved_residues,\
         toInclude = np.array(f.read().split()).astype(int)
         I=involvement_in_mode_based_on_participation(\
             P,resi,toInclude)
+        # scale each mode's participation by their normalized eigenvalues
+        normalized_ev = normalize_eigenvalues(eigenvalues)
+        for i in range(len(I)):
+            I[i] = I[i] * normalized_ev[i]
+
         save_matrix(involvement_string+'.npy',I)
         plot_involvement(I,involvement_string)
 
