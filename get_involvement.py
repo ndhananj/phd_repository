@@ -3,7 +3,8 @@ from modes import *
 
 def normalize_eigenvalues(eigenvalues):
     max_ev = eigenvalues.max()
-    return eigenvalues /= max_ev
+    eigenvalues = eigenvalues / max_ev
+    return eigenvalues
 
 def get_involvement(involved_residues,\
     outputForChunks=False,\
@@ -29,7 +30,7 @@ def get_involvement(involved_residues,\
         for i in range(len(I)):
             I[i] = I[i] * normalized_ev[i]
 
-        save_matrix(involvement_string+'.npy',I)
+        #save_matrix(involvement_string+'.npy',I)
         plot_involvement(I,involvement_string)
 
 if __name__ == '__main__':
