@@ -76,7 +76,7 @@ def get_delta_D(D, D0):
     
 # plotting function
 def plot_short_axis_spectrum(delta_D, title):
-    plot_involvement(delta_D, title, mode_end=41, style='bars')
+    plot_involvement(delta_D, title, mode_end=None, style='lines')
 
 # get amplitude from eigenvalues
 def get_amp_from_ev(ev, mode_index):
