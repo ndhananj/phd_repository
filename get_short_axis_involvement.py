@@ -76,7 +76,7 @@ def get_delta_D(D, D0):
     
 # plotting function
 def plot_short_axis_spectrum(delta_D, title):
-    plot_involvement(delta_D, title, mode_end=None, style='lines')
+    plot_involvement(delta_D, title, mode_end=41, style='bars')
 
 # get amplitude from eigenvalues
 def get_amp_from_ev(ev, mode_index):
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 4:
         output_graph = sys.argv[4]
     else:
-        output_graph = "short_axis_distance_across_all_modes"
+        output_graph = "bottleneck size increment [Å]"
 
     # shift amplitude
     # shift_amp = 40
