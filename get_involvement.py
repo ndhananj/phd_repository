@@ -4,6 +4,7 @@ from modes import *
 def get_involvement(involved_residues,\
     outputForChunks=False,\
     participation='participations.npy',\
+    eigenvalues='eigenvalues.npy', \
     residues='residues.npy',\
     involvement_string='Bottleneck Involvement'):
     if(outputForChunks):
@@ -28,9 +29,11 @@ if __name__ == '__main__':
         else False
     participation = sys.argv[3] if len(sys.argv)>3 \
        else 'participations.npy'
-    residues = sys.argv[4] if len(sys.argv)>4 \
+    eigenvalues = sys.argv[4] if len(sys.argv)>4 \
+       else 'eigenvalues.npy'
+    residues = sys.argv[5] if len(sys.argv)>5 \
        else 'residues.npy'
-    involvement_string = sys.argv[5] if len(sys.argv)>5 \
+    involvement_string = sys.argv[6] if len(sys.argv)>6 \
        else 'Bottleneck Involvement'
     get_involvement(involved_residues,outputForChunks,participation,\
         residues,involvement_string)
