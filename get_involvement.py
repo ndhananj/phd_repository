@@ -1,6 +1,12 @@
 
 from modes import *
 
+def get_scale_factor(N, normalized_BI):
+    BI_sum = 0
+    for i in range(N):
+        BI_sum += normalized_BI[i]
+    return 1 / BI_sum
+
 def normalize_eigenvalues(eigenvalues):
     max_ev = eigenvalues.max()
     eigenvalues = eigenvalues / max_ev
@@ -30,6 +36,9 @@ def get_involvement(involved_residues,\
         normalized_ev = normalize_eigenvalues(ev)
         for i in range(len(I)):
             I[i] = I[i] * normalized_ev[i]
+
+        scale_factor = get_scale_factor(40, I)
+        I *= scale_factor
 
         #save_matrix(involvement_string+'.npy',I)
         plot_involvement(I,involvement_string)
