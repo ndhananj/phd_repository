@@ -98,6 +98,21 @@ def get_xvg_stats(xvgfile,fitfile=None,outputForChunks=False,unbias=False):
 def get_atom_participation_from_eigenvector(S):
     return np.sum(S**2,axis=1)
 
+def get_atom_connectivity_from_covariance(cov_matrix, focus_atom_number_index):
+    atom_index_max = cov_matrix.shape[0]
+
+    correlation_vector = []
+
+    for i in range(0, atom_index_max, 3):
+        one_correlation = get_one_correlation_value(cov_matrix, focus_atom_number_index * 3, i)
+        correlation_vector.append(one_correlation)
+
+    # normalize by the focus atom
+    focus_atom_variance = correlation_vector[focus_atom_number_index]
+    correlation_vector /= focus_atom_variance
+
+    return np.array(correlation_vector)
+
 # get all atom participations for full
 def get_all_atom_participations(S):
     new_shape=(int(S.shape[0]/3),3,S.shape[1])
@@ -161,6 +176,12 @@ def calc_em_and_derived_stats(masses,P,k):
 def make_color_column(S,resi):
     P=get_atom_participation_from_eigenvector(S)
     B=get_coloring(P,resi)
+    return pd.DataFrame(data=B,columns=color_items)
+
+# coloring based on connectivity
+def make_connectivity_color_column(cov,resi):
+    C=get_atom_connectivity_from_covariance(cov)
+    B=get_coloring(C,resi)
     return pd.DataFrame(data=B,columns=color_items)
 
 def shift_by_mode(df,mode,indeces,mul):
