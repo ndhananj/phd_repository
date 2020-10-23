@@ -179,8 +179,8 @@ def make_color_column(S,resi):
     return pd.DataFrame(data=B,columns=color_items)
 
 # coloring based on connectivity
-def make_connectivity_color_column(cov,resi):
-    C=get_atom_connectivity_from_covariance(cov)
+def make_connectivity_color_column(cov,resi,focus_atom):
+    C=get_atom_connectivity_from_covariance(cov,focus_atom)
     B=get_coloring(C,resi)
     return pd.DataFrame(data=B,columns=color_items)
 
