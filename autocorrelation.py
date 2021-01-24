@@ -1,6 +1,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy
+import scipy.optimize
 
 def transformed_coords(coords,S):
     print("coords",coords.shape)
@@ -27,31 +29,57 @@ def autocorrelate(coords):
 def autocorrelate_transformed(coords,S):
     return autocorrelate(transformed_coords(coords, S))
 
+def sum_simple_exp_decay(t,a,tau1,tau2):
+    return a*np.exp(-t/tau1)+(1-a)*np.exp(-t/tau2)
+
+def format_label(decimal):
+    return "{:.2f}".format(decimal)
+
+def sum_simple_exp_label(a,tau1,tau2):
+    return "$"+format_label(a)+"e^{-t/"+format_label(tau1)+"}+"\
+     +format_label(1-a)+"e^{-t/"+format_label(tau2)+"}$"#+format_label(c)+"$"
+
+def fit_sum_exp(corr,time,f=sum_simple_exp_decay):
+    popt, pcov = scipy.optimize.curve_fit(f,time,corr)
+    return popt, pcov
+
 def plot_autocorrelate(corr,idx,time_step=0.05):
     N=corr.shape[0]
     T=N*time_step
     subscript = str(idx)+str(idx)
+    time = np.linspace(0,T,N)
+    popt, pcov = fit_sum_exp(corr,time,f=sum_simple_exp_decay)
     fig= plt.figure()
     ax = fig.add_subplot(111)
-    ax.scatter(np.linspace(0,T,N),corr)
+    ax.plot(time,corr,linewidth=0.3,color='k',label='values')
+    ax.plot(
+       time,sum_simple_exp_decay(time,*popt),
+       linewidth=0.3,color='k',linestyle='--',
+       label=sum_simple_exp_label(*popt)
+    )
     ax.set_xlabel('time (ps)')
     ax.set_ylabel(r"$K_{"+subscript+"}$")
     plt.ylim(min([0,corr.min()*1.1]),corr.max()*1.1)
+    plt.legend()
     plt.savefig("autocorr"+str(idx)+".jpg")
     #plt.show()
 
 # plot coordinates that are assumed transformed
-def plot_transformed(coords,idx,time_step=0.05):
+def plot_transformed(coords,idx,time_step=0.05,time_start=1500):
     N=coords.shape[0]
     T=N*time_step
+    w=np.convolve(coords, np.ones(2000)/2000, mode='same')
+    times=np.linspace(0,T,N)
     subscript = str(idx)
     fig= plt.figure()
     ax = fig.add_subplot(111)
-    ax.plot(np.linspace(0,T,N),coords,linewidth=0.3,color='k')
+    ax.plot(times,coords,linewidth=0.3,color='b',linestyle='--',alpha=0.5)
+    ax.plot(times,w,linewidth=1,color='r')
     ax.set_xlabel('time (ps)')
     ax.set_ylabel(r"$Q(t)_{"+subscript+"}(\AA)$")
     plt.ylim(min([0,coords.min()*1.1]),coords.max()*1.1)
-    plt.savefig("transformed"+subscript+".jpg")
+    #plt.show()
+    plt.savefig("transformed"+subscript+".png",dpi=600)
 
 # plot coordinates that are assumed transformed
 def plot_transformed_phase(coords,idx,time_step=0.05):
@@ -67,6 +95,7 @@ def plot_transformed_phase(coords,idx,time_step=0.05):
     ax.set_ylabel(r"$\dot{Q}(t)_{"+subscript+"}(\AA/ps)$")
     plt.xlim(min([0,pos.min()*1.1]),pos.max()*1.1)
     plt.ylim(min([0,vel.min()*1.1]),vel.max()*1.1)
+    #plt.show()
     plt.savefig("transformed_phased"+subscript+".jpg")
 
 # plot coordinates that are assumed transformed
