@@ -65,7 +65,7 @@ def plot_autocorrelate(corr,idx,time_step=0.05):
     #plt.show()
 
 # plot coordinates that are assumed transformed
-def plot_transformed(coords,idx,time_step=0.05,time_start=1500):
+def plot_transformed(coords,idx,time_step=0.05,time_start=0):
     N=coords.shape[0]
     T=N*time_step
     w=np.convolve(coords, np.ones(2000)/2000, mode='same')
