@@ -12,10 +12,10 @@ def plot_transformed_coords(\
 if __name__ == '__main__':
     coordinates = sys.argv[1] if len(sys.argv)>1 \
         else 'transformed_coords.npy'
-    start_mode = sys.argv[2] if len(sys.argv)>2 \
+    start_mode = int(sys.argv[2]) if len(sys.argv)>2 \
        else 0
-    end_mode = sys.argv[3] if len(sys.argv)>3 \
+    end_mode = int(sys.argv[3]) if len(sys.argv)>3 \
        else 9
-    time_start = float(sys.argv[4]) if len(sys.argv)>3 \
+    time_start = float(sys.argv[4]) if len(sys.argv)>4 \
         else 1500
     plot_transformed_coords(coordinates,start_mode,end_mode,time_start)
