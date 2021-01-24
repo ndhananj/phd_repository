@@ -21,7 +21,7 @@ def calc_single_coord_stats(coords,unbias=False):
 def calc_coord_stats(coords1,coords2,unbias=False):
     mean1 = coords1.mean(axis=0)
     mean2 = coords2.mean(axis=0)
-    div = coords1.shape[0] + float(bool(unbias))
+    div = coords1.shape[0] - float(bool(unbias))
     cov = np.matmul((coords2-mean2).T,coords1-mean1)/(div)
     u, s, vh = svd(cov)
     return mean1, mean2, cov, s, u, vh.T
