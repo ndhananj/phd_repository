@@ -63,9 +63,13 @@ def plot_autocorrelate(corr,idx,time_step=0.05):
     plt.legend()
     plt.savefig("autocorr"+str(idx)+".jpg")
     #plt.show()
+    fig.close()
 
 # plot coordinates that are assumed transformed
-def plot_transformed(coords,idx,time_step=0.05,time_start=0):
+def plot_transformed(
+    coords,idx,time_step=0.05,time_start=0,basename="transformed"
+    ):
+    print(coords)
     N=coords.shape[0]
     T=N*time_step
     w=np.convolve(coords, np.ones(2000)/2000, mode='same')
@@ -79,7 +83,34 @@ def plot_transformed(coords,idx,time_step=0.05,time_start=0):
     ax.set_ylabel(r"$Q(t)_{"+subscript+"}(\AA)$")
     plt.ylim(min([0,coords.min()*1.1]),coords.max()*1.1)
     #plt.show()
-    plt.savefig("transformed"+subscript+".png",dpi=600)
+    plt.savefig(basename+subscript+".png",dpi=600)
+
+# plot coordinates that are assumed transformed
+def plot_chunked_transformed(
+    chunked_coords,idx,time_step=0.05,time_start=0,basename="transformed"
+    ):
+    subscript = str(idx)
+    fig= plt.figure()
+    ax = fig.add_subplot(111)
+    ymin=0
+    ymax=0
+    for coords in chunked_coords:
+        if(len(coords)>1):
+            print(coords)
+            N=coords.shape[0]
+            T=N*time_step
+            w=np.convolve(coords, np.ones(2000)/2000, mode='same')
+            times=np.linspace(0,T,N)+time_start
+            ax.plot(times,coords,linewidth=0.3,color='b',linestyle='--',alpha=0.5)
+            ax.plot(times,w,linewidth=1,color='r')
+            time_start+=T
+            ymin = min([ymin,coords.min()*1.1])
+            ymax = max([ymax,coords.max()*1.1])
+    ax.set_xlabel('time (ps)')
+    ax.set_ylabel(r"$Q(t)_{"+subscript+"}(\AA)$")
+    plt.ylim(ymin,ymax)
+    #plt.show()
+    plt.savefig(basename+subscript+".png",dpi=600)
 
 # plot coordinates that are assumed transformed
 def plot_transformed_phase(coords,idx,time_step=0.05):
@@ -97,6 +128,37 @@ def plot_transformed_phase(coords,idx,time_step=0.05):
     plt.ylim(min([0,vel.min()*1.1]),vel.max()*1.1)
     #plt.show()
     plt.savefig("transformed_phased"+subscript+".jpg")
+
+# plot coordinates that are assumed transformed
+def plot_chunked_transformed_phase(
+    chunked_coords,idx,time_step=0.05,time_start=0,basename="transformed_phase"
+    ):
+    subscript = str(idx)
+    fig= plt.figure()
+    ax = fig.add_subplot(111)
+    ymin, ymax, xmin, xmax = 0, 0, 0, 0
+    for coords in chunked_coords:
+        if(len(coords)>1):
+            print(coords)
+            N=coords.shape[0]
+            c=np.reshape(coords,(N))
+            vel=(c[1:]-c[:N-1])/time_step
+            pos=(c[1:]+c[:N-1])/2
+            T=N*time_step
+            w=np.convolve(coords, np.ones(2000)/2000, mode='same')
+            times=np.linspace(0,T,N)+time_start
+            ax.plot(pos,vel,linewidth=0.3,color='k')
+            time_start+=T
+            xmin = min([xmin,pos.min()*1.1])
+            xmax = max([xmax,pos.max()*1.1])
+            ymin = min([ymin,vel.min()*1.1])
+            ymax = max([ymax,vel.max()*1.1])
+    ax.set_xlabel(r"$Q(t)_{"+subscript+"}(\AA)$")
+    ax.set_ylabel(r"$\dot{Q}(t)_{"+subscript+"}(\AA/ps)$")
+    plt.xlim(xmin,xmax)
+    plt.ylim(ymin,ymax)
+    #plt.show()
+    plt.savefig(basename+subscript+".png",dpi=600)
 
 # plot coordinates that are assumed transformed
 def plot_trans_std(coords):

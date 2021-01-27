@@ -2,8 +2,8 @@
 from gmx_file_processing import *
 from alignment import *
 
-
 import matplotlib.pyplot as plt
+import tables as tb
 
 stat_items=['x_coord', 'y_coord', 'z_coord']
 
@@ -57,10 +57,28 @@ def load_matrix(filename):
         m=np.load(f,m)
     return m
 
+def save_hdf(basename,m):
+    f = tb.open_file(basename+'.h5', mode="w")
+    coord = tb.Float32Col()
+    i=0
+    for row in m:
+        if 0==i :
+            ROW_SIZE = row.shape[1]
+            farr = f.create_earray(f.root, basename, coord, (0, ROW_SIZE))
+        farr.append(row.reshape(1,ROW_SIZE))
+        i=i+1
+    f.close()
+
+
+def load_hdf(basename):
+    h5file = tb.open_file(basename+'.h5', mode="r")
+    table = h5file.root[basename]
+    return (c for c in table.iterrows())
+
 def get_xvg_coords(xvgfile):
     return get_xvg_data_array_from_file(xvgfile)[:,1:]*10 #nm to A
 
-def chunked_xvg_coords(xvgfile,chunk_size=2000):
+def chunked_xvg_coords(xvgfile,chunk_size=20000):
     chunks = chunked_xvg_coord_data_from_file(xvgfile,chunk_size=chunk_size)
     return (np.array(c)[:,1:]*10 for c in chunks)
 
@@ -77,7 +95,7 @@ def get_fitted_coords(coords,trg_c,unbias=False):
     print("Shape of data for covariance calculation:",coords.shape)
     return coords
 
-def get_xvg_stats(xvgfile,fitfile=None,outputForChunks=False,unbias=False):
+def fitted_chunks_from_xvg(xvgfile,fitfile=None,unbias=False):
     coords = chunked_xvg_coords(xvgfile)
     if(fitfile):
         print("Fitting...")
@@ -86,6 +104,10 @@ def get_xvg_stats(xvgfile,fitfile=None,outputForChunks=False,unbias=False):
         print("Fit file read in")
         trg_c = pdb.df['ATOM'].filter(items=stat_items).to_numpy()
         coords = (get_fitted_coords(c,trg_c,unbias=unbias) for c in coords)
+    return coords
+
+def get_xvg_stats(xvgfile,fitfile=None,outputForChunks=False,unbias=False):
+    coords = fiited_chunks_from_xvg(xvgfile,fitfile=fitfile,unbias=unbias)
     if(outputForChunks):
         return (calc_single_coord_stats(c,unbias=unbias) for c in coords)
     else:
