@@ -67,7 +67,7 @@ def plot_autocorrelate(corr,idx,time_step=0.05):
     ax.set_ylabel(r"$K_{"+subscript+"}$")
     plt.ylim(min([0,corr.min()*1.1]),corr.max()*1.1)
     plt.legend()
-    plt.savefig("autocorr"+str(idx)+".png".dpi=600)
+    plt.savefig("autocorr"+str(idx)+".png",dpi=600)
     #plt.show()
 
 
