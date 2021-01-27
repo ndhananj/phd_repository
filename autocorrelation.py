@@ -24,8 +24,6 @@ def autocorr1D(x,t):
     return A/A[0]
 
 def chunked_autocorr1D(chunks,t):
-    comps = ((corr_comps(x,k) for k in range(t)) for x in chunks)
-
     return autocorr1D(np.concatenate(list(chunks)),t)
 
 def autocorr1D_transformed(coords,S,i):
