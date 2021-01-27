@@ -9,16 +9,23 @@ def transformed_coords(coords,S):
     print("S",S.shape)
     return np.matmul(coords-coords.mean(axis=0),S.T)
 
+def corr_comps(x,k):
+    return (x[i]*x[i+k] for i in range(N-k))
+
 def autocorr1D(x,t):
-    if t<=0:
-        t=N
     print("to_autocorr",x.shape)
     N = x.shape[0]
-    A = np.zeros(x.shape[0])
+    if not(t) or t<=0:
+        t=N
+    A = np.zeros(t)
     x -= np.mean(x)
     for k in range(t):
-        A[k]=np.mean(np.array([x[i]*x[i+k] for i in range(N-k)]))
+        A[k]=np.mean(np.array(list(corr_comps(x,k))))
     return A/A[0]
+
+def chunked_autocorr1D(chunks,t):
+    #comps = ((corr_comps(x,k) for k in range(t)) for x in chunks)
+    return autocorr1D(np.concatenate(list(chunks)),t)
 
 def autocorr1D_transformed(coords,S,i):
     return autocorr1D(transformed_coords(coords,S)[:,i])
@@ -61,9 +68,9 @@ def plot_autocorrelate(corr,idx,time_step=0.05):
     ax.set_ylabel(r"$K_{"+subscript+"}$")
     plt.ylim(min([0,corr.min()*1.1]),corr.max()*1.1)
     plt.legend()
-    plt.savefig("autocorr"+str(idx)+".jpg")
+    plt.savefig("autocorr"+str(idx)+".png".dpi=600)
     #plt.show()
-    fig.close()
+
 
 # plot coordinates that are assumed transformed
 def plot_transformed(
@@ -144,15 +151,44 @@ def plot_chunked_transformed_phase(
             c=np.reshape(coords,(N))
             vel=(c[1:]-c[:N-1])/time_step
             pos=(c[1:]+c[:N-1])/2
-            T=N*time_step
-            w=np.convolve(coords, np.ones(2000)/2000, mode='same')
-            times=np.linspace(0,T,N)+time_start
             ax.plot(pos,vel,linewidth=0.3,color='k')
-            time_start+=T
             xmin = min([xmin,pos.min()*1.1])
             xmax = max([xmax,pos.max()*1.1])
             ymin = min([ymin,vel.min()*1.1])
             ymax = max([ymax,vel.max()*1.1])
+    ax.set_xlabel(r"$Q(t)_{"+subscript+"}(\AA)$")
+    ax.set_ylabel(r"$\dot{Q}(t)_{"+subscript+"}(\AA/ps)$")
+    plt.xlim(xmin,xmax)
+    plt.ylim(ymin,ymax)
+    #plt.show()
+    plt.savefig(basename+subscript+".png",dpi=600)
+
+# plot coordinates that are assumed transformed
+def plot_chunked_transformed_phase_hist(
+    chunked_coords,idx,basename="transformed_phase_hist", time_step=0.05
+    ):
+    subscript = str(idx)
+    fig= plt.figure()
+    ax = fig.add_subplot(111)
+    ymin, ymax, xmin, xmax = 0, 0, 0, 0
+    vel_list = []
+    pos_list = []
+    for coords in chunked_coords:
+        if(len(coords)>1):
+            print(coords)
+            N=coords.shape[0]
+            c=np.reshape(coords,(N))
+            vel = (c[1:]-c[:N-1])/time_step
+            pos = (c[1:]+c[:N-1])/2
+            vel_list.extend(vel)
+            pos_list.extend(pos)
+            #ax.plot(pos,vel,linewidth=0.3,color='k')
+            xmin = min([xmin,pos.min()*1.1])
+            xmax = max([xmax,pos.max()*1.1])
+            ymin = min([ymin,vel.min()*1.1])
+            ymax = max([ymax,vel.max()*1.1])
+    h = ax.hist2d(pos_list,vel_list,bins=40)
+    fig.colorbar(h[3], ax=ax)
     ax.set_xlabel(r"$Q(t)_{"+subscript+"}(\AA)$")
     ax.set_ylabel(r"$\dot{Q}(t)_{"+subscript+"}(\AA/ps)$")
     plt.xlim(xmin,xmax)
