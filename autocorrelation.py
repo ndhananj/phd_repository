@@ -9,7 +9,7 @@ def transformed_coords(coords,S):
     print("S",S.shape)
     return np.matmul(coords-coords.mean(axis=0),S.T)
 
-def corr_comps(x,k):
+def corr_comps(x,k,N):
     return (x[i]*x[i+k] for i in range(N-k))
 
 def autocorr1D(x,t):
@@ -20,11 +20,12 @@ def autocorr1D(x,t):
     A = np.zeros(t)
     x -= np.mean(x)
     for k in range(t):
-        A[k]=np.mean(np.array(list(corr_comps(x,k))))
+        A[k]=np.mean(np.array(list(corr_comps(x,k,N))))
     return A/A[0]
 
 def chunked_autocorr1D(chunks,t):
-    #comps = ((corr_comps(x,k) for k in range(t)) for x in chunks)
+    comps = ((corr_comps(x,k) for k in range(t)) for x in chunks)
+
     return autocorr1D(np.concatenate(list(chunks)),t)
 
 def autocorr1D_transformed(coords,S,i):
