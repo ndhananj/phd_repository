@@ -4,10 +4,11 @@ import matplotlib.pyplot as plt
 import scipy
 import scipy.optimize
 
+# assumes that the coordinated have alrady been set to a mean
 def transformed_coords(coords,S):
     print("coords",coords.shape)
     print("S",S.shape)
-    return np.matmul(coords-coords.mean(axis=0),S.T)
+    return np.matmul(coords,S)
 
 def corr_comps(x,k,N):
     return (x[i]*x[i+k] for i in range(N-k))
@@ -110,8 +111,11 @@ def plot_chunked_transformed(
             ax.plot(times,coords,linewidth=0.3,color='b',linestyle='--',alpha=0.5)
             ax.plot(times,w,linewidth=1,color='r')
             time_start+=T
-            ymin = min([ymin,coords.min()*1.1])
-            ymax = max([ymax,coords.max()*1.1])
+        else:
+            print("Short coords")
+            time_start+=1
+        ymin = min([ymin,coords.min()*1.1])
+        ymax = max([ymax,coords.max()*1.1])
     ax.set_xlabel('time (ps)')
     ax.set_ylabel(r"$Q(t)_{"+subscript+"}(\AA)$")
     plt.ylim(ymin,ymax)
@@ -192,6 +196,33 @@ def plot_chunked_transformed_phase_hist(
     ax.set_ylabel(r"$\dot{Q}(t)_{"+subscript+"}(\AA/ps)$")
     plt.xlim(xmin,xmax)
     plt.ylim(ymin,ymax)
+    #plt.show()
+    plt.savefig(basename+subscript+".png",dpi=600)
+
+# plot coordinates that are assumed transformed
+def plot_chunked_transformed_hist(
+    chunked_coords,idx,basename="transformed_hist", time_step=0.05
+    ):
+    subscript = str(idx)
+    fig= plt.figure()
+    ax = fig.add_subplot(111)
+    ymin, ymax, xmin, xmax = 0, 0, 0, 0
+    pos_list = []
+    for coords in chunked_coords:
+        if(len(coords)>1):
+            print(coords)
+            N=coords.shape[0]
+            c=np.reshape(coords,(N))
+            pos = c
+            pos_list.extend(pos)
+            #ax.plot(pos,vel,linewidth=0.3,color='k')
+            xmin = min([xmin,pos.min()*1.1])
+            xmax = max([xmax,pos.max()*1.1])
+    h = ax.hist(pos_list,bins=40)
+    #fig.colorbar(h)
+    ax.set_xlabel(r"$Q(t)_{"+subscript+"}(\AA)$")
+    ax.set_ylabel("count")
+    plt.xlim(xmin,xmax)
     #plt.show()
     plt.savefig(basename+subscript+".png",dpi=600)
 

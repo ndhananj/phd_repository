@@ -107,7 +107,7 @@ def fitted_chunks_from_xvg(xvgfile,fitfile=None,unbias=False):
     return coords
 
 def get_xvg_stats(xvgfile,fitfile=None,outputForChunks=False,unbias=False):
-    coords = fiited_chunks_from_xvg(xvgfile,fitfile=fitfile,unbias=unbias)
+    coords = fitted_chunks_from_xvg(xvgfile,fitfile=fitfile,unbias=unbias)
     if(outputForChunks):
         return (calc_single_coord_stats(c,unbias=unbias) for c in coords)
     else:

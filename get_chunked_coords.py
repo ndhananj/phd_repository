@@ -7,6 +7,7 @@ def get_coords(\
     coords = fitted_chunks_from_xvg(xvgfile,fitfile=pdbToAlign,unbias=unbias)
     i=0
     for c in coords:
+        print(chunk_name(coordinates,i))
         save_matrix(chunk_name(coordinates,i),c)
         i+=1
 if __name__ == '__main__':

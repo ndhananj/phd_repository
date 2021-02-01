@@ -9,6 +9,7 @@ def get_means(
     i=0
     nums_list=[]
     while path.exists(chunk_name(coordinates,i)):
+        print(chunk_name(coordinates,i))
         coords = load_matrix(chunk_name(coordinates,i))
         nums_list.append(coords.shape[0])
         save_matrix(chunk_name(means,i),coords.mean(axis=0))
