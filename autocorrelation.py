@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy
 import scipy.optimize
+import vaex
 
 # assumes that the coordinated have alrady been set to a mean
 def transformed_coords(coords,S):
@@ -113,7 +114,6 @@ def plot_chunked_transformed(
             time_start+=T
         else:
             print("Short coords")
-            time_start+=1
         ymin = min([ymin,coords.min()*1.1])
         ymax = max([ymax,coords.max()*1.1])
     ax.set_xlabel('time (ps)')
