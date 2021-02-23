@@ -40,12 +40,19 @@ def autocorrelate_transformed(coords,S):
 def sum_simple_exp_decay(t,a,tau1,tau2):
     return a*np.exp(-t/tau1)+(1-a)*np.exp(-t/tau2)
 
+def sum_exp_lin(t,a,tau1,tau2):
+    return a*np.exp(-t/tau1)+(1-a)*-t/tau2
+
 def format_label(decimal):
     return "{:.2f}".format(decimal)
 
 def sum_simple_exp_label(a,tau1,tau2):
     return "$"+format_label(a)+"e^{-t/"+format_label(tau1)+"}+"\
      +format_label(1-a)+"e^{-t/"+format_label(tau2)+"}$"#+format_label(c)+"$"
+
+def sum_exp_lin_label(a,tau1,tau2):
+    return "$"+format_label(a)+"e^{-t/"+format_label(tau1)+"}+"\
+     +"-"+format_label(1-a)+"t/"+format_label(tau2)+"$"#+format_label(c)+"$"
 
 def fit_sum_exp(corr,time,f=sum_simple_exp_decay):
     popt, pcov = scipy.optimize.curve_fit(f,time,corr)
@@ -56,15 +63,15 @@ def plot_autocorrelate(corr,idx,time_step=0.05):
     T=N*time_step
     subscript = str(idx)+str(idx)
     time = np.linspace(0,T,N)
-    popt, pcov = fit_sum_exp(corr,time,f=sum_simple_exp_decay)
+    #popt, pcov = fit_sum_exp(corr,time,f=sum_exp_lin)
     fig= plt.figure()
     ax = fig.add_subplot(111)
     ax.plot(time,corr,linewidth=0.3,color='k',label='values')
-    ax.plot(
-       time,sum_simple_exp_decay(time,*popt),
-       linewidth=0.3,color='k',linestyle='--',
-       label=sum_simple_exp_label(*popt)
-    )
+    #ax.plot(
+    #   time,sum_exp_lin(time,*popt),
+    #   linewidth=0.3,color='k',linestyle='--',
+    #   label=sum_exp_lin_label(*popt)
+    #)
     ax.set_xlabel('time (ps)')
     ax.set_ylabel(r"$K_{"+subscript+"}$")
     plt.ylim(min([0,corr.min()*1.1]),corr.max()*1.1)
@@ -80,13 +87,14 @@ def plot_transformed(
     print(coords)
     N=coords.shape[0]
     T=N*time_step
-    w=np.convolve(coords, np.ones(2000)/2000, mode='same')
+    window=2000
+    w=np.convolve(coords, np.ones(window)/window, mode='same')
     times=np.linspace(0,T,N)
     subscript = str(idx)
     fig= plt.figure()
     ax = fig.add_subplot(111)
     ax.plot(times,coords,linewidth=0.3,color='b',linestyle='--',alpha=0.5)
-    ax.plot(times,w,linewidth=1,color='r')
+    ax.plot(times[window:N-window],w[window:N-window],linewidth=1,color='r')
     ax.set_xlabel('time (ps)')
     ax.set_ylabel(r"$Q(t)_{"+subscript+"}(\AA)$")
     plt.ylim(min([0,coords.min()*1.1]),coords.max()*1.1)

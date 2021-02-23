@@ -313,6 +313,25 @@ def plot_involvement(I,involvement_string="Involvement",mode_end=40,style="bars"
     plt.savefig(involvement_string+".jpg")
     #plt.show()
 
+# plot mode_sum
+def plot_mode_sum(D,mode_end=8000,style="lines"):
+    fig= plt.figure()
+    ax = fig.add_subplot(111)
+    mode_end = D.shape[0] if None==mode_end else mode_end
+    print("mode_end",mode_end)
+    vals=D.sum(axis=0)[:mode_end]
+    print("vals",vals.shape)
+    if style == "lines":
+        ax.vlines(range(mode_end), [0], vals,color='b')
+    else:
+        ax.bar(range(mode_end),vals)
+    ylabel="sum of coefficeients"
+    ax.set_xlabel('Mode')
+    ax.set_ylabel(ylabel)
+    plt.ylim(0,vals.max()*1.1)
+    #plt.savefig(ylabel+".jpg")
+    plt.show()
+
 # calculate surface area of triangles made from centroid
 def calc_triangulated_surface_area(xvgfile):
     coords=get_xvg_coords(xvgfile)

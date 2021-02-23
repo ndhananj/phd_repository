@@ -1,13 +1,18 @@
 
 from autocorrelation import *
 from modes import *
+import os.path
+from os import path
 
-def plot_transformed_coords(\
+def get_transformed_var(\
     coordinates='transformed_coords.npy',\
-    start_mode=0, end_mode=9,time_start=0,time_step=0.05):
+    start_mode=0, end_mode=9,time_start=0
+    ):
     coords = load_matrix(coordinates)
-    for i in range(start_mode,end_mode+1):
-        plot_transformed(coords[:,i],i,time_step=time_step,time_start=time_start)
+    for j in range(start_mode,end_mode+1):
+        used = coords[:,j]
+        variance = np.matmul(used.T,used)/used.shape[0]
+        print("var(Q["+str(j)+"])=",variance)
 
 if __name__ == '__main__':
     coordinates = sys.argv[1] if len(sys.argv)>1 \
@@ -18,6 +23,4 @@ if __name__ == '__main__':
        else 9
     time_start = float(sys.argv[4]) if len(sys.argv)>4 \
         else 0
-    time_step = float(sys.argv[5]) if len(sys.argv)>5 \
-        else 0.05
-    plot_transformed_coords(coordinates,start_mode,end_mode,time_start,time_step)
+    get_transformed_var(coordinates,start_mode,end_mode,time_start)
